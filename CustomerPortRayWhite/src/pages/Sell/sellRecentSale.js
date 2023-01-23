@@ -15,7 +15,8 @@ import { toJS } from "mobx";
 const propertySaleStatusEnum = ["unknown", "Sell", "Rent"]
 const propertyTypeEnum = ["unknown", "House", "Apartment", "Offices", "Retail", "Land/Development", "Industrial/Warehouse", "Commercial Farming"]
 
-const SellRecentSale = observer(() => {
+const SellRecentSale = observer(({ location }) => {
+  const [searchKeyword, setSearchKeyword] = useState(location.state.searchSuburbKeyword);
 
   //API
   const { propertyStore } = useStores();
@@ -24,9 +25,13 @@ const SellRecentSale = observer(() => {
   useEffect(() => {
     propertyStore.getPropertyList()
       .then(() => {
-        setPropertyList(propertyStore.propertyList.filter(p => propertySaleStatusEnum[parseInt(p.saleStatus)] === 'Sell'));
+        setPropertyList(propertyStore.propertyList.filter(p => searchKeyword
+          ? p.address.streetName === searchKeyword && propertySaleStatusEnum[parseInt(p.saleStatus)] === 'Sell'
+          : propertySaleStatusEnum[parseInt(p.saleStatus)] === 'Sell'));
+        //  setPropertyList(propertyStore.propertyList.filter(p => p.address.streetName === searchKeyword && propertySaleStatusEnum[parseInt(p.saleStatus)] === 'Sell'));
         //setPropertyList(filteredpropertyList);
       }).catch(() => { });
+    setSearchKeyword(location.state.searchSuburbKeyword);
   }, []);
 
 
@@ -78,7 +83,7 @@ const SellRecentSale = observer(() => {
     <div>
       <Layout>
         <div style={{ marginTop: 30 }}>
-          <MapInSell />
+          <MapInSell searchKeyword={searchKeyword} />
         </div>
         {/* //after map header */}
         <div style={{ display: 'flex', flexDirection: 'row', justifyContent: 'center', marginTop: 30, }}>

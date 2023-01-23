@@ -83,6 +83,10 @@ const Index = observer(() => {
   //query
   const [queryRent, setQueryRent] = useState(true);
   const [querySale, setQuerySale] = useState(true);
+  const [searchSuburbKeyword, setSearchSuburbKeyword] = useState();
+  console.log(searchSuburbKeyword + "keywords");
+
+
   //API
 
   const { propertyStore } = useStores();
@@ -107,29 +111,37 @@ const Index = observer(() => {
 
                 <h1 style={{ color: 'white', fontSize: 48, fontWeight: "bold", }}>Unparalleled Service</h1>
                 {/* search bar */}
-                <div style={{ display: 'flex', flexDirection: 'row', backgroundColor: '#FFF', width: '50%', height: '80px', marginTop: '80px' }}>
-                  {/* status */}
-                  <div style={{ display: 'flex', flexDirection: 'column', width: '25%', padding: 10 }}>
-                    <label style={{ color: 'grey' }}>Status</label>
-                    <select defaultValue='Rent' variant='unstyled' onChange={((event) => { event.target.value === 'Rent' ? setQueryRent(true) && setQuerySale(false) : setQueryRent(false) && setQuerySale(true) })}>
-                      <option value='Rent'>Rent</option>
-                      <option value='Sale'>Sale</option>
-                    </select>
-                  </div>
-                  {/* search property */}
-                  <div style={{ width: '50%', padding: 10, marginTop: 10 }}>
-                    <input placeholder='Search for properties, suburbs or keywords' style={{ width: '100%', marginTop: 8 }} />
 
+                <div style={{ display: 'flex', flexDirection: 'column', width: '50%', height: '80px', marginTop: '80px' }}>
+                  {/* status */}
+
+                  <div style={{ backgroundColor: '#FFF', width: '20%', height: '40%' }} class="rounded-t-lg ">
+                    <label style={{ color: 'grey', marginLeft: '20px' }} >Status</label>
                   </div>
-                  {/* find property */}
-                  <div style={{ width: '25%', padding: 10, backgroundColor: 'yellow' }}>
-                    {/* <button onClick={setPropertyList(propertyList.filter(p => propertySaleStatusEnum[parseInt(p.saleStatus)] === queryRent))}>FIND PROPERTIES</button> */}
-                    {queryRent && <Link to="/Rent/rentRecentlyListed">
-                      <button >FIND PROPERTIES </button>
-                    </Link>}
-                    {!queryRent && <Link to="/Sell/sellRecentSale">
-                      <button >FIND PROPERTIES </button>
-                    </Link>}
+                  <div style={{ display: 'flex', flexDirection: 'row', backgroundColor: '#FFF', height: '60%' }}>
+                    <div style={{ width: '20%', padding: 10, marginLeft: '10px' }}>
+                      {/* <label style={{ color: 'grey' }}>Status</label> */}
+                      <select defaultValue='Rent' variant='unstyled' onChange={((event) => { event.target.value === 'Rent' ? setQueryRent(true) && setQuerySale(false) : setQueryRent(false) && setQuerySale(true) })}>
+                        <option value='Rent'>Rent</option>
+                        <option value='Sale'>Sale</option>
+                      </select>
+                    </div>
+
+                    {/* search property */}
+                    <div style={{ width: '55%', marginLeft: '20px' }}>
+                      <input placeholder='Search for properties, suburbs or keywords' onBlur={(event) => setSearchSuburbKeyword(event.target.value)} style={{ width: '100%', marginTop: 8 }} />
+
+                    </div>
+                    {/* find property */}
+                    <div style={{ width: '25%', padding: 10, backgroundColor: 'yellow' }}>
+                      {/* <button onClick={setPropertyList(propertyList.filter(p => propertySaleStatusEnum[parseInt(p.saleStatus)] === queryRent))}>FIND PROPERTIES</button> */}
+                      {queryRent && <Link to="/Rent/rentRecentlyListed" state={{ searchSuburbKeyword: searchSuburbKeyword }}>
+                        <button >FIND PROPERTIES </button>
+                      </Link>}
+                      {!queryRent && <Link to="/Sell/sellRecentSale" state={{ searchSuburbKeyword: searchSuburbKeyword }}>
+                        <button >FIND PROPERTIES </button>
+                      </Link>}
+                    </div>
                   </div>
                 </div>
                 {/* text */}

@@ -40,7 +40,9 @@ const options = {
 };
 
 //
-const MapInSell = observer(() => {
+const MapInSell = observer((props) => {
+    //props
+    const searchKeyword = props.searchKeyword;
     //API
     const { propertyStore } = useStores();
     const [propertyList, setPropertyList] = useState([]);
@@ -48,7 +50,10 @@ const MapInSell = observer(() => {
     useEffect(() => {
         propertyStore.getPropertyList()
             .then(() => {
-                setPropertyList(propertyStore.propertyList.filter(p => propertySaleStatusEnum[parseInt(p.saleStatus)] === 'Sell'));
+                // setPropertyList(propertyStore.propertyList.filter(p => propertySaleStatusEnum[parseInt(p.saleStatus)] === 'Sell'));
+                setPropertyList(propertyStore.propertyList.filter(p => searchKeyword
+                    ? p.address.streetName === searchKeyword && propertySaleStatusEnum[parseInt(p.saleStatus)] === 'Sell'
+                    : propertySaleStatusEnum[parseInt(p.saleStatus)] === 'Sell'));
             }).catch(() => { });
     }, []);
 

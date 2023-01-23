@@ -15,18 +15,25 @@ import { toJS } from "mobx";
 const propertySaleStatusEnum = ["unknown", "Sell", "Rent"]
 const propertyTypeEnum = ["unknown", "House", "Apartment", "Offices", "Retail", "Land/Development", "Industrial/Warehouse", "Commercial Farming"]
 
-const RentRecentlyListed = observer(() => {
+const RentRecentlyListed = observer(({ location }) => {
+  const [searchKeyword, setSearchKeyword] = useState(location.state.searchSuburbKeyword);
 
   //API
   const { propertyStore } = useStores();
   const [propertyList, setPropertyList] = useState([]);
   //,then is async ' method
+
   useEffect(() => {
+
     propertyStore.getPropertyList()
       .then(() => {
-        setPropertyList(propertyStore.propertyList.filter(p => propertySaleStatusEnum[parseInt(p.saleStatus)] === 'Rent'));
+        setPropertyList(propertyStore.propertyList.filter(p => searchKeyword
+          ? p.address.streetName === searchKeyword && propertySaleStatusEnum[parseInt(p.saleStatus)] === 'Rent'
+          : propertySaleStatusEnum[parseInt(p.saleStatus)] === 'Rent'));
+        //  setPropertyList(propertyStore.propertyList.filter(p => p.address.streetName === searchKeyword && propertySaleStatusEnum[parseInt(p.saleStatus)] === 'Sell'));
         //setPropertyList(filteredpropertyList);
       }).catch(() => { });
+    setSearchKeyword(location.state.searchSuburbKeyword);
   }, []);
 
 
