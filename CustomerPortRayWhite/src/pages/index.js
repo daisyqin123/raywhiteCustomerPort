@@ -161,13 +161,12 @@ const Index = observer(() => {
 
                   newSelected
                     ? p.propertyId > 0
-                    : p.propertyId > 0
-                      && openSoonSelected
+                    : openSoonSelected
                       //69.44444 days
                       ? new Date().getTime() - new Date(p.updateAt).getTime() > 6000000000
-                      : p.propertyId > 0
-                        //70.60185185185 days
-                        && clickUpcomingSelected
+                      :
+                      //70.60185185185 days
+                      clickUpcomingSelected
                         ? new Date().getTime() - new Date(p.updateAt).getTime() > 6100000000
                         : p.propertyId > 0
 
